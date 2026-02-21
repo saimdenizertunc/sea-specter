@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     template: '%s · sea-specter',
   },
   description: 'An editorial blog on design, culture, and the spaces between.',
+  icons: { icon: '/logo.png' },
   openGraph: {
     title: 'sea-specter',
     description: 'An editorial blog on design, culture, and the spaces between.',

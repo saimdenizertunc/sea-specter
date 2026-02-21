@@ -19,9 +19,10 @@ export async function createPost(formData: FormData) {
   const excerpt = formData.get('excerpt') as string
   const content = formData.get('content') as string
   const coverImage = (formData.get('coverImage') as string) || null
+  const postCoverImage = (formData.get('postCoverImage') as string) || null
 
   const post = await prisma.post.create({
-    data: { title, slug, excerpt, content, coverImage, authorId: userId },
+    data: { title, slug, excerpt, content, coverImage, postCoverImage, authorId: userId },
   })
 
   revalidatePath('/admin')
@@ -35,11 +36,12 @@ export async function updatePost(id: string, formData: FormData) {
   const slug = formData.get('slug') as string
   const excerpt = formData.get('excerpt') as string
   const content = formData.get('content') as string
-  const coverImage = (formData.get('coverImage') as string) || undefined
+  const coverImage = (formData.get('coverImage') as string) || null
+  const postCoverImage = (formData.get('postCoverImage') as string) || null
 
   await prisma.post.update({
     where: { id },
-    data: { title, slug, excerpt, content, coverImage },
+    data: { title, slug, excerpt, content, coverImage, postCoverImage },
   })
 
   revalidatePath('/admin')

@@ -22,10 +22,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params
   const post = await prisma.post.findUnique({
     where: { slug, published: true },
-    select: { title: true, excerpt: true, coverImage: true },
+    select: { title: true, excerpt: true, coverImage: true, postCoverImage: true },
   })
 
   if (!post) return { title: 'Post Not Found' }
+
+  const metadataImage = post.postCoverImage ?? post.coverImage
 
   return {
     title: post.title,
@@ -33,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      images: post.coverImage ? [post.coverImage] : [],
+      images: metadataImage ? [metadataImage] : [],
     },
   }
 }
@@ -48,13 +50,15 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   if (!post) notFound()
 
+  const heroImage = post.postCoverImage ?? post.coverImage
+
   return (
     <article className="min-h-screen pb-24">
       {/* Hero cover image */}
-      {post.coverImage && (
+      {heroImage && (
         <div className="relative h-[55vh] md:h-[70vh] w-full overflow-hidden">
           <Image
-            src={post.coverImage}
+            src={heroImage}
             alt={post.title}
             fill
             priority

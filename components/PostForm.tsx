@@ -11,11 +11,12 @@ import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 
 interface PostFormProps {
-  post?: Post
+  post?: Post & { postCoverImage?: string | null }
 }
 
 export function PostForm({ post }: PostFormProps) {
   const [coverImage, setCoverImage] = useState(post?.coverImage ?? '')
+  const [postCoverImage, setPostCoverImage] = useState(post?.postCoverImage ?? '')
   const [uploading, setUploading] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -23,6 +24,7 @@ export function PostForm({ post }: PostFormProps) {
 
   async function handleAction(formData: FormData) {
     formData.set('coverImage', coverImage)
+    formData.set('postCoverImage', postCoverImage)
     await action(formData)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
@@ -30,9 +32,9 @@ export function PostForm({ post }: PostFormProps) {
 
   return (
     <form action={handleAction} className="space-y-6 max-w-3xl">
-      {/* Cover image */}
+      {/* Card image */}
       <div className="space-y-3">
-        <label className="block text-sm font-medium font-sans text-stone-700">Cover Image</label>
+        <label className="block text-sm font-medium font-sans text-stone-700">Card Image (Home/Blog List)</label>
 
         {coverImage && (
           <div className="relative aspect-video w-full max-w-sm rounded overflow-hidden border border-stone-200">
@@ -56,6 +58,47 @@ export function PostForm({ post }: PostFormProps) {
               // Support both url and ufsUrl depending on UploadThing version
               const url = (res[0] as { url?: string; ufsUrl?: string }).ufsUrl ?? res[0].url
               if (url) setCoverImage(url)
+            }
+          }}
+          onUploadError={(error) => {
+            setUploading(false)
+            alert(`Upload failed: ${error.message}`)
+          }}
+          appearance={{
+            button:
+              'bg-stone-900 text-stone-50 hover:bg-stone-700 font-sans text-sm rounded px-4 py-2 font-medium ut-uploading:cursor-not-allowed',
+            allowedContent: 'text-stone-400 text-xs font-sans',
+          }}
+        />
+      </div>
+
+      {/* Single post hero image */}
+      <div className="space-y-3">
+        <label className="block text-sm font-medium font-sans text-stone-700">
+          Post Cover Image (Single Post Page)
+        </label>
+
+        {postCoverImage && (
+          <div className="relative aspect-video w-full max-w-sm rounded overflow-hidden border border-stone-200">
+            <Image src={postCoverImage} alt="Post cover preview" fill className="object-cover" />
+            <button
+              type="button"
+              onClick={() => setPostCoverImage('')}
+              className="absolute top-2 right-2 bg-stone-900/70 text-white text-xs px-2 py-1 rounded hover:bg-stone-900"
+            >
+              Remove
+            </button>
+          </div>
+        )}
+
+        <UploadButton<OurFileRouter, 'coverImageUploader'>
+          endpoint="coverImageUploader"
+          onUploadBegin={() => setUploading(true)}
+          onClientUploadComplete={(res) => {
+            setUploading(false)
+            if (res?.[0]) {
+              const url = (res[0] as { url?: string; ufsUrl?: string }).ufsUrl ?? res[0].url
+              if (url) setPostCoverImage(url)
             }
           }}
           onUploadError={(error) => {
