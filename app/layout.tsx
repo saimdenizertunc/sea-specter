@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Inter } from 'next/font/google'
+import { Playfair_Display, Inter, JetBrains_Mono } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 
@@ -12,6 +12,12 @@ const playfair = Playfair_Display({
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
   display: 'swap',
 })
 
@@ -34,10 +40,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider>
       <html
         lang="en"
-        className={`${playfair.variable} ${inter.variable}`}
+        className={`${playfair.variable} ${inter.variable} ${jetbrainsMono.variable}`}
         data-scroll-behavior="smooth"
       >
-        <body className="font-sans bg-stone-50 text-stone-900 antialiased">{children}</body>
+        <body className="font-sans bg-swaddle-base text-swaddle-ink antialiased">{children}</body>
       </html>
     </ClerkProvider>
   )

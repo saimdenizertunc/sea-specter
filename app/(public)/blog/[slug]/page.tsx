@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import prisma from '@/lib/prisma'
 import { MdxRenderer } from '@/components/MdxRenderer'
 import { FadeIn } from '@/components/FadeIn'
+import { ArticleLayout } from '@/components/ArticleLayout'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -22,12 +23,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params
   const post = await prisma.post.findUnique({
     where: { slug, published: true },
-    select: { title: true, excerpt: true, coverImage: true, postCoverImage: true },
+    select: { title: true, excerpt: true, coverImage: true },
   })
 
   if (!post) return { title: 'Post Not Found' }
 
-  const metadataImage = post.postCoverImage ?? post.coverImage
+  const metadataImage = post.coverImage
 
   return {
     title: post.title,
@@ -50,55 +51,50 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   if (!post) notFound()
 
-  const heroImage = post.postCoverImage ?? post.coverImage
+  const heroImage = post.coverImage
 
   return (
-    <article className="min-h-screen pb-24">
-      {/* Hero cover image */}
-      {heroImage && (
-        <div className="relative h-[55vh] md:h-[70vh] w-full overflow-hidden">
-          <Image
-            src={heroImage}
-            alt={post.title}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-stone-900/10 via-transparent to-stone-950/60" />
-        </div>
-      )}
+    <ArticleLayout>
+      <article className="pb-24">
+        {/* Hero cover image */}
+        {heroImage && (
+          <div className="relative h-[60vh] md:h-[80vh] w-full overflow-hidden border-b-[1px] border-swaddle-ink">
+            <Image
+              src={heroImage}
+              alt={post.title}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          </div>
+        )}
 
-      <div className="max-w-3xl mx-auto px-6">
-        {/* Header */}
-        <FadeIn className="py-12 md:py-16">
-          <Link
-            href="/"
-            className="inline-block font-sans text-xs text-stone-400 uppercase tracking-widest mb-8 hover:text-stone-600 transition-colors"
-          >
-            ← Back
-          </Link>
-          <h1 className="font-serif text-4xl md:text-6xl leading-tight tracking-tight text-stone-900 mb-5">
-            {post.title}
-          </h1>
-          <p className="font-sans text-lg text-stone-500 leading-relaxed mb-6">{post.excerpt}</p>
-          {post.publishedAt && (
-            <time className="font-sans text-xs text-stone-400 uppercase tracking-widest">
-              {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </time>
-          )}
-          <div className="mt-10 h-px bg-stone-200" />
-        </FadeIn>
+        <div className="max-w-3xl mx-auto px-6">
+          {/* Header */}
+          <FadeIn className="pt-20 pb-16 md:pt-32 md:pb-24">
+            <h1 className="font-sans font-bold text-6xl md:text-8xl leading-[0.9] tracking-tighter text-swaddle-ink mb-8">
+              {post.title}
+            </h1>
+            <p className="font-sans text-xl md:text-2xl text-swaddle-ink/80 leading-[1.6] mb-8">{post.excerpt}</p>
+            {post.publishedAt && (
+              <time className="font-mono text-sm text-swaddle-ink/60 uppercase tracking-widest block">
+                {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+            )}
+            <div className="mt-16 h-px bg-swaddle-ink/20" />
+          </FadeIn>
 
-        {/* MDX content */}
-        <div className="pb-16">
-          <MdxRenderer source={post.content} />
+          {/* MDX content */}
+          <div className="pb-16 text-swaddle-ink">
+            <MdxRenderer source={post.content} />
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </ArticleLayout>
   )
 }
