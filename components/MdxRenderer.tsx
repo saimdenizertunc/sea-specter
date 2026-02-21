@@ -1,70 +1,81 @@
+import type { ComponentPropsWithoutRef } from 'react'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import type { MDXComponents } from 'mdx/types'
 
 const components: MDXComponents = {
-  h1: ({ children, ...props }) => (
-    <h1 className="font-serif text-4xl mt-10 mb-4 leading-tight" {...props}>
+  h1: ({ children, ...props }: ComponentPropsWithoutRef<'h1'>) => (
+    <h1 className="mt-10 mb-4 font-serif text-4xl leading-tight" {...props}>
       {children}
     </h1>
   ),
-  h2: ({ children, ...props }) => (
-    <h2 className="font-serif text-3xl mt-8 mb-3 leading-tight" {...props}>
+  h2: ({ children, ...props }: ComponentPropsWithoutRef<'h2'>) => (
+    <h2 className="mt-8 mb-3 font-serif text-3xl leading-tight" {...props}>
       {children}
     </h2>
   ),
-  h3: ({ children, ...props }) => (
-    <h3 className="font-serif text-2xl mt-6 mb-2 leading-tight" {...props}>
+  h3: ({ children, ...props }: ComponentPropsWithoutRef<'h3'>) => (
+    <h3 className="mt-6 mb-2 font-serif text-2xl leading-tight" {...props}>
       {children}
     </h3>
   ),
-  p: ({ children, ...props }) => (
-    <p className="font-sans text-stone-700 leading-relaxed mb-5 text-[1.0625rem]" {...props}>
+  p: ({ children, ...props }: ComponentPropsWithoutRef<'p'>) => (
+    <p className="mb-5 font-sans text-[1.0625rem] leading-relaxed text-stone-700" {...props}>
       {children}
     </p>
   ),
-  a: ({ children, ...props }) => (
+  a: ({ children, ...props }: ComponentPropsWithoutRef<'a'>) => (
     <a
-      className="underline underline-offset-4 decoration-stone-400 hover:decoration-stone-900 transition-colors"
+      className="underline decoration-stone-400 underline-offset-4 transition-colors hover:decoration-stone-900"
       {...props}
     >
       {children}
     </a>
   ),
-  blockquote: ({ children, ...props }) => (
+  blockquote: ({ children, ...props }: ComponentPropsWithoutRef<'blockquote'>) => (
     <blockquote
-      className="border-l-4 border-stone-300 pl-6 italic text-stone-500 my-6"
+      className="my-6 border-l-4 border-stone-300 pl-6 italic text-stone-500"
       {...props}
     >
       {children}
     </blockquote>
   ),
-  code: ({ children, ...props }) => (
-    <code
-      className="bg-stone-100 text-stone-800 px-1.5 py-0.5 rounded text-[0.875em] font-mono"
-      {...props}
-    >
-      {children}
-    </code>
-  ),
-  pre: ({ children, ...props }) => (
+  code: ({ children, className, ...props }: ComponentPropsWithoutRef<'code'>) => {
+    if (className) {
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      )
+    }
+
+    return (
+      <code
+        className="rounded bg-stone-100 px-1.5 py-0.5 font-mono text-[0.875em] text-stone-800"
+        {...props}
+      >
+        {children}
+      </code>
+    )
+  },
+  pre: ({ children, ...props }: ComponentPropsWithoutRef<'pre'>) => (
     <pre
-      className="bg-stone-900 text-stone-100 p-6 rounded-lg overflow-x-auto my-6 font-mono text-sm leading-relaxed"
+      className="my-6 overflow-x-auto rounded-lg bg-stone-900 p-6 font-mono text-sm leading-relaxed text-stone-100"
       {...props}
     >
       {children}
     </pre>
   ),
-  ul: ({ children, ...props }) => (
-    <ul className="font-sans list-disc pl-6 mb-5 space-y-1 text-stone-700" {...props}>
+  ul: ({ children, ...props }: ComponentPropsWithoutRef<'ul'>) => (
+    <ul className="mb-5 list-disc space-y-1 pl-6 font-sans text-stone-700" {...props}>
       {children}
     </ul>
   ),
-  ol: ({ children, ...props }) => (
-    <ol className="font-sans list-decimal pl-6 mb-5 space-y-1 text-stone-700" {...props}>
+  ol: ({ children, ...props }: ComponentPropsWithoutRef<'ol'>) => (
+    <ol className="mb-5 list-decimal space-y-1 pl-6 font-sans text-stone-700" {...props}>
       {children}
     </ol>
   ),
-  hr: (props) => <hr className="border-stone-200 my-8" {...props} />,
+  hr: (props: ComponentPropsWithoutRef<'hr'>) => <hr className="my-8 border-stone-200" {...props} />,
 }
 
 interface MdxRendererProps {

@@ -74,14 +74,7 @@ export default async function AdminDashboard() {
                   </Button>
                 </form>
 
-                <form
-                  action={deletePost.bind(null, post.id)}
-                  onSubmit={(e) => {
-                    if (!confirm(`Delete "${post.title}"? This cannot be undone.`)) {
-                      e.preventDefault()
-                    }
-                  }}
-                >
+                <form action={deletePost.bind(null, post.id)}>
                   <Button variant="danger" className="h-7 px-3 text-xs" type="submit">
                     Delete
                   </Button>

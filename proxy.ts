@@ -2,9 +2,9 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
-export default clerkMiddleware((auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   if (isAdminRoute(req)) {
-    auth().protect()
+    await auth.protect()
   }
 })
 

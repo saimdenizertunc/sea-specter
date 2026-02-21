@@ -91,9 +91,9 @@ export default async function BlogPostPage({ params }: PageProps) {
         </FadeIn>
 
         {/* MDX content */}
-        <FadeIn delay={0.15} className="pb-16">
+        <div className="pb-16">
           <MdxRenderer source={post.content} />
-        </FadeIn>
+        </div>
       </div>
     </article>
   )

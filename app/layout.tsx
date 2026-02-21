@@ -31,7 +31,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+      <html
+        lang="en"
+        className={`${playfair.variable} ${inter.variable}`}
+        data-scroll-behavior="smooth"
+      >
         <body className="font-sans bg-stone-50 text-stone-900 antialiased">{children}</body>
       </html>
     </ClerkProvider>
