@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -16,14 +17,17 @@ export function Nav() {
 
   return (
     <>
-      {/* Fixed header — mix-blend-difference makes it visible on any background */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-5 mix-blend-difference">
-        <Link
-          href="/"
-          onClick={() => setOpen(false)}
-          className="font-serif text-xl text-white tracking-tight"
-        >
-          sea-specter
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-5 bg-stone-950/10 backdrop-blur-sm">
+        <Link href="/" onClick={() => setOpen(false)}>
+          <Image
+            src="/logo.png"
+            alt="sea-specter"
+            width={120}
+            height={32}
+            style={{ height: 'auto' }}
+            className="invert"
+            priority
+          />
         </Link>
 
         <button
@@ -34,19 +38,19 @@ export function Nav() {
         >
           <span
             className={cn(
-              'block h-px w-7 bg-white transition-transform duration-300 ease-in-out origin-center',
+              'block h-px w-7 bg-stone-950 transition-transform duration-300 ease-in-out origin-center',
               open && 'translate-y-[7px] rotate-45',
             )}
           />
           <span
             className={cn(
-              'block h-px w-7 bg-white transition-opacity duration-200',
+              'block h-px w-7 bg-stone-950 transition-opacity duration-200',
               open && 'opacity-0',
             )}
           />
           <span
             className={cn(
-              'block h-px w-7 bg-white transition-transform duration-300 ease-in-out origin-center',
+              'block h-px w-7 bg-stone-950 transition-transform duration-300 ease-in-out origin-center',
               open && '-translate-y-[7px] -rotate-45',
             )}
           />

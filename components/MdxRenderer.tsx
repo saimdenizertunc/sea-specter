@@ -2,7 +2,18 @@ import type { ComponentPropsWithoutRef } from 'react'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import type { MDXComponents } from 'mdx/types'
 
+function PullQuote({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="my-10 border-y border-stone-300 px-8 py-6 text-center">
+      <p className="font-serif text-2xl italic leading-snug text-stone-800 md:text-3xl">
+        {children}
+      </p>
+    </div>
+  )
+}
+
 const components: MDXComponents = {
+  PullQuote,
   h1: ({ children, ...props }: ComponentPropsWithoutRef<'h1'>) => (
     <h1 className="mt-10 mb-4 font-serif text-4xl leading-tight" {...props}>
       {children}
