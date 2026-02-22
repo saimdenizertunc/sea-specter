@@ -22,7 +22,7 @@ There are no tests in this project.
 
 ### Route Groups
 
-- `app/(public)/` — Wraps pages in `<Nav />` and `<Footer />`. Contains the homepage (`page.tsx`) and `blog/[slug]/page.tsx`.
+- `app/(public)/` — Wraps pages in `<Nav />` and `<Footer />`. Contains the homepage (`page.tsx`), the archive listing (`blog/page.tsx`), and the post detail page (`blog/[slug]/page.tsx`).
 - `app/admin/` — Protected admin panel with its own layout (header + `<UserButton />`). The catch-all editor route `app/admin/[id]/page.tsx` handles both create (`id === 'new'`) and edit (any real post ID).
 - `app/sign-in/[[...sign-in]]/` and `app/sign-up/[[...sign-up]]/` — Catch-all Clerk auth pages.
 - `app/api/uploadthing/` — UploadThing file router (Clerk-authenticated, images only, 4 MB max).
