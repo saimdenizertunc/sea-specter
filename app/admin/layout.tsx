@@ -1,6 +1,14 @@
 import Link from 'next/link'
 import { UserButton } from '@clerk/nextjs'
+import type { Metadata } from 'next'
 import { Button } from '@/components/ui/Button'
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (

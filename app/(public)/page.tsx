@@ -1,8 +1,49 @@
 import prisma from '@/lib/prisma'
 import { PostCard } from '@/components/PostCard'
 import { FadeIn, FadeInStagger, FadeInItem } from '@/components/FadeIn'
+import type { Metadata } from 'next'
+import { absoluteUrl, siteConfig } from '@/lib/seo'
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: 'Blog',
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  alternates: {
+    canonical: absoluteUrl('/'),
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+    },
+  },
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    type: 'article',
+    siteName: siteConfig.name,
+    locale: 'en_US',
+    url: absoluteUrl('/'),
+    images: [
+      {
+        url: '/logo.png',
+        alt: siteConfig.name,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@seaspecter',
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: ['/logo.png'],
+  },
+}
 
 export default async function HomePage() {
   const posts = await prisma.post.findMany({
