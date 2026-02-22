@@ -14,11 +14,23 @@ interface PostFormProps {
   post?: Post & { postCoverImage?: string | null }
 }
 
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 export function PostForm({ post }: PostFormProps) {
   const [coverImage, setCoverImage] = useState(post?.coverImage ?? '')
   const [postCoverImage, setPostCoverImage] = useState(post?.postCoverImage ?? '')
   const [uploading, setUploading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [title, setTitle] = useState(post?.title ?? '')
+  const [slug, setSlug] = useState(post?.slug ?? '')
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(Boolean(post?.slug))
 
   const action = post ? updatePost.bind(null, post.id) : createPost
 
@@ -116,7 +128,12 @@ export function PostForm({ post }: PostFormProps) {
       <Input
         name="title"
         label="Title"
-        defaultValue={post?.title}
+        value={title}
+        onChange={(e) => {
+          const nextTitle = e.target.value
+          setTitle(nextTitle)
+          if (!slugManuallyEdited) setSlug(slugify(nextTitle))
+        }}
         required
         placeholder="Post title"
       />
@@ -124,7 +141,11 @@ export function PostForm({ post }: PostFormProps) {
       <Input
         name="slug"
         label="Slug"
-        defaultValue={post?.slug}
+        value={slug}
+        onChange={(e) => {
+          setSlug(e.target.value)
+          setSlugManuallyEdited(true)
+        }}
         required
         placeholder="my-post-slug"
         pattern="[a-z0-9-]+"
