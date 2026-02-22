@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { UserButton } from '@clerk/nextjs'
 import type { Metadata } from 'next'
 import { Button } from '@/components/ui/Button'
@@ -15,8 +16,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-10 border-b border-stone-200 bg-white/90 backdrop-blur-sm px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-5">
-          <Link href="/" className="font-serif text-lg text-stone-900 hover:text-stone-600 transition-colors">
-            sea-specter
+          <Link href="/">
+            <Image
+              src="/logo.png"
+              alt="sea-specter"
+              width={120}
+              height={32}
+              style={{ height: 'auto' }}
+              className="invert"
+              priority
+            />
           </Link>
           <span className="text-stone-200 select-none">|</span>
           <nav className="flex items-center gap-4">
