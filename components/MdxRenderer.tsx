@@ -2,6 +2,10 @@ import type { ComponentPropsWithoutRef } from 'react'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import type { MDXComponents } from 'mdx/types'
 import { BleedImage } from './BleedImage'
+import { Callout } from './Callout'
+import { StatCard } from './StatCard'
+import { BarChart } from './BarChart'
+import { CloudImage } from './CloudImage'
 
 function PullQuote({ children }: { children: React.ReactNode }) {
   return (
@@ -14,6 +18,10 @@ function PullQuote({ children }: { children: React.ReactNode }) {
 }
 
 const components: MDXComponents = {
+  Callout,
+  StatCard,
+  BarChart,
+  CloudImage,
   PullQuote,
   BleedImage,
   h1: ({ children, ...props }: ComponentPropsWithoutRef<'h1'>) => (

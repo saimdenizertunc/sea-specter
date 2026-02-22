@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import type { Metadata } from 'next'
+import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import { MdxRenderer } from '@/components/MdxRenderer'
 import { FadeIn } from '@/components/FadeIn'
@@ -100,6 +102,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export const revalidate = 60
 
 export default async function BlogPostPage({ params }: PageProps) {
+  const { userId } = await auth()
   const { slug } = await params
   const post = await prisma.post.findUnique({
     where: { slug, published: true },
@@ -179,6 +182,17 @@ export default async function BlogPostPage({ params }: PageProps) {
           <div className="pb-16 text-swaddle-ink">
             <MdxRenderer source={post.content} />
           </div>
+
+          {userId && (
+            <div className="pb-16 border-t border-swaddle-ink/20 pt-8">
+              <Link
+                href={`/admin/${post.id}`}
+                className="inline-flex items-center rounded border border-swaddle-ink/30 px-4 py-2 font-sans text-sm text-swaddle-ink hover:bg-swaddle-ink hover:text-swaddle-paper transition-colors"
+              >
+                Edit Post
+              </Link>
+            </div>
+          )}
         </div>
       </article>
     </ArticleLayout>
