@@ -17,7 +17,10 @@ const components: MDXComponents = {
   PullQuote,
   BleedImage,
   h1: ({ children, ...props }: ComponentPropsWithoutRef<'h1'>) => (
-    <h1 className="mt-16 mb-6 font-sans font-bold text-6xl md:text-8xl leading-[0.9] tracking-tighter" {...props}>
+    <h1
+      className="mt-16 mb-6 font-sans font-bold text-[clamp(2.4rem,8vw,5.5rem)] leading-[0.9] tracking-tighter"
+      {...props}
+    >
       {children}
     </h1>
   ),

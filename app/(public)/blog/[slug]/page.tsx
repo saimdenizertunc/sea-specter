@@ -159,7 +159,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="max-w-3xl mx-auto px-6">
           {/* Header */}
           <FadeIn className="pt-20 pb-16 md:pt-32 md:pb-24">
-            <h1 className="font-sans font-bold text-6xl md:text-8xl leading-[0.9] tracking-tighter text-swaddle-ink mb-8">
+            <h1 className="font-sans font-bold text-[clamp(2.6rem,9vw,6.4rem)] leading-[0.9] tracking-tighter text-swaddle-ink mb-8">
               {post.title}
             </h1>
             <p className="font-sans text-xl md:text-2xl text-swaddle-ink/80 leading-[1.6] mb-8">{post.excerpt}</p>

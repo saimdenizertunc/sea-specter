@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { FadeIn } from '@/components/FadeIn'
 
 export const metadata = {
@@ -11,7 +12,7 @@ export default function AboutPage() {
         <div className="min-h-screen bg-swaddle-base text-swaddle-ink pt-32 pb-24 selection:bg-stone-300 selection:text-stone-900">
             <div className="max-w-4xl mx-auto px-6 md:px-12">
                 <FadeIn>
-                    <h1 className="font-serif text-6xl md:text-8xl tracking-tight leading-[0.9] text-center mb-16 uppercase">
+                    <h1 className="font-serif text-[clamp(2.8rem,10vw,6rem)] tracking-tight leading-[0.9] text-center mb-16 uppercase">
                         Demystifying
                         <br />
                         <span className="italic text-stone-600">The Depth</span>
@@ -41,7 +42,7 @@ export default function AboutPage() {
                                     Welcome to <strong>sea-specter</strong>—a space dedicated to exploring the uncharted territories of software engineering, system design, and the architecture of the web.
                                 </p>
                                 <p>
-                                    Technology moves at an unrelenting pace. It's easy to get lost in the noise of new frameworks and trending libraries. Our mission is to cut through that noise, focusing on the fundamental principles, the elegant architectures, and the unseen depths of code that power the modern digital world.
+                                    Technology moves at an unrelenting pace. It&apos;s easy to get lost in the noise of new frameworks and trending libraries. Our mission is to cut through that noise, focusing on the fundamental principles, the elegant architectures, and the unseen depths of code that power the modern digital world.
                                 </p>
                             </section>
                         </FadeIn>
@@ -65,7 +66,7 @@ export default function AboutPage() {
                                     </div>
                                     <div className="p-6 border border-stone-300">
                                         <h3 className="font-serif text-xl mb-3">Accessible Design</h3>
-                                        <p className="text-stone-600 text-sm">Technical writing doesn't have to be dry. We pair complex topics with premium aesthetics and readable typography.</p>
+                                        <p className="text-stone-600 text-sm">Technical writing doesn&apos;t have to be dry. We pair complex topics with premium aesthetics and readable typography.</p>
                                     </div>
                                 </div>
                             </section>
@@ -88,10 +89,10 @@ export default function AboutPage() {
                                 <div>
                                     <h2 className="font-serif text-4xl mb-4">The Author</h2>
                                     <p className="mb-4">
-                                        I'm a software engineer passionate about scalable architecture and the art of programming. With a background spanning various domains of the tech industry, I built sea-specter as a notebook to share my findings, document discoveries, and contribute to the broader engineering community.
+                                        I&apos;m a software engineer passionate about scalable architecture and the art of programming. With a background spanning various domains of the tech industry, I built sea-specter as a notebook to share my findings, document discoveries, and contribute to the broader engineering community.
                                     </p>
                                     <p className="text-stone-600 italic">
-                                        "Code is read much more often than it is written."
+                                        &quot;Code is read much more often than it is written.&quot;
                                     </p>
                                 </div>
                             </section>
@@ -99,12 +100,12 @@ export default function AboutPage() {
 
                         <FadeIn delay={0.7}>
                             <div className="mt-20 text-center">
-                                <a
+                                <Link
                                     href="/blog"
                                     className="inline-block px-8 py-4 bg-swaddle-ink text-swaddle-base font-serif text-xl md:text-2xl hover:bg-stone-800 transition-colors uppercase tracking-widest"
                                 >
                                     Explore the Archive
-                                </a>
+                                </Link>
                             </div>
                         </FadeIn>
 

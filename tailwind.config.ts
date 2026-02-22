@@ -15,8 +15,8 @@ const config: Config = {
         mono: ['var(--font-mono)', 'monospace'],
       },
       fontSize: {
-        '10xl': ['8rem', { lineHeight: '1' }],
-        '11xl': ['10rem', { lineHeight: '1' }],
+        '10xl': ['clamp(4rem, 8vw, 8rem)', { lineHeight: '1' }],
+        '11xl': ['clamp(5rem, 10vw, 10rem)', { lineHeight: '1' }],
       },
       colors: {
         swaddle: {

@@ -3,9 +3,28 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import type { Post } from '@prisma/client'
 
-// Tiny blurred placeholder for layout stability
-const BLUR_DATA_URL =
-  'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgcEBf/EAB8QAAICAgMBAQAAAAAAAAAAAAECAwQFERIhMf/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCw2rXoY8fNa2la9+3dGOqaSc5JTbk22+bb7t+yQAB/2Q=='
+function makeBlurDataUrl(seed: string): string {
+  let hash = 0
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = seed.charCodeAt(i) + ((hash << 5) - hash)
+  }
+
+  const hueA = Math.abs(hash) % 360
+  const hueB = (hueA + 40) % 360
+  const svg = `
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+      <defs>
+        <linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'>
+          <stop offset='0%' stop-color='hsl(${hueA} 22% 86%)' />
+          <stop offset='100%' stop-color='hsl(${hueB} 18% 78%)' />
+        </linearGradient>
+      </defs>
+      <rect width='64' height='64' fill='url(#g)' />
+    </svg>
+  `
+
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
+}
 
 interface PostCardProps {
   post: Post
@@ -15,6 +34,7 @@ interface PostCardProps {
 export function PostCard({ post, index }: PostCardProps) {
   const isWide = index % 3 === 0
   const isOffset = index % 2 !== 0
+  const blurDataUrl = makeBlurDataUrl(post.slug || post.title)
 
   return (
     <Link
@@ -39,7 +59,7 @@ export function PostCard({ post, index }: PostCardProps) {
             sizes={isWide ? '(max-width: 768px) 100vw, 66vw' : '(max-width: 768px) 100vw, 33vw'}
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
             placeholder="blur"
-            blurDataURL={BLUR_DATA_URL}
+            blurDataURL={blurDataUrl}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-stone-100">
