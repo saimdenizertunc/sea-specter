@@ -6,6 +6,7 @@ import { Callout } from './Callout'
 import { StatCard } from './StatCard'
 import { BarChart } from './BarChart'
 import { CloudImage } from './CloudImage'
+import { MdxErrorBoundary } from './MdxErrorBoundary'
 
 function PullQuote({ children }: { children: React.ReactNode }) {
   return (
@@ -116,8 +117,10 @@ interface MdxRendererProps {
 
 export function MdxRenderer({ source }: MdxRendererProps) {
   return (
-    <div className="mdx-content">
-      <MDXRemote source={source} components={components} />
-    </div>
+    <MdxErrorBoundary>
+      <div className="mdx-content">
+        <MDXRemote source={source} components={components} />
+      </div>
+    </MdxErrorBoundary>
   )
 }

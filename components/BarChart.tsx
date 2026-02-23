@@ -10,19 +10,22 @@ interface BarData {
 }
 
 interface BarChartProps {
-    data: BarData[]
+    data?: BarData[] | null
     title?: string
     maxValue?: number
 }
 
 export function BarChart({ data, title, maxValue }: BarChartProps) {
-    const max = maxValue || Math.max(...data.map(d => d.value))
+    const safeData = Array.isArray(data) ? data : []
+    const computedMax = safeData.length > 0 ? Math.max(...safeData.map((d) => d.value)) : 0
+    const max = Math.max(maxValue ?? computedMax, 1)
 
     return (
         <div className="my-12 border border-swaddle-ink/20 p-8">
             {title && <h4 className="mb-8 font-sans text-2xl font-bold text-swaddle-ink">{title}</h4>}
-            <div className="flex flex-col gap-6">
-                {data.map((item, index) => {
+            {safeData.length > 0 ? (
+              <div className="flex flex-col gap-6">
+                {safeData.map((item, index) => {
                     const percentage = (item.value / max) * 100
 
                     return (
@@ -44,7 +47,10 @@ export function BarChart({ data, title, maxValue }: BarChartProps) {
                         </div>
                     )
                 })}
-            </div>
+              </div>
+            ) : (
+              <p className="font-sans text-sm text-swaddle-ink/60">No chart data available.</p>
+            )}
         </div>
     )
 }

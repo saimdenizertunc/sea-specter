@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cd /c/Users/saimd/OneDrive/Desktop/claude/sea-specter && npx eslint app/layout.tsx components/Nav.tsx actions/posts.ts 2>&1)"
+      "Bash(cd /c/Users/saimd/OneDrive/Desktop/claude/sea-specter && npx eslint app/layout.tsx components/Nav.tsx actions/posts.ts 2>&1)",
+      "Bash(grep:*)"
     ]
   }
 }

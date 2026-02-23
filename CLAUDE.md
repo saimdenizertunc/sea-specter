@@ -6,12 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm run dev          # Start dev server (Next.js, uses webpack explicitly)
-npm run build        # Production build
+npm run build        # Production build (auto-runs prisma generate first)
 npm run lint         # ESLint flat config (eslint.config.mjs) — do NOT create .eslintrc.json
 npx tsc --noEmit     # Type-check without emitting
 
 npm run prisma:generate   # Regenerate Prisma client after schema changes
 npm run prisma:push       # Push schema to DB (run once after DATABASE_URL is set)
+npm run verify:deploy -- <url>  # Smoke-check a deployed URL (node scripts/verify-deploy.mjs)
 ```
 
 There are no tests in this project.
@@ -22,14 +23,15 @@ There are no tests in this project.
 
 ### Route Groups
 
-- `app/(public)/` — Wraps pages in `<Nav />` and `<Footer />`. Contains the homepage (`page.tsx`), the archive listing (`blog/page.tsx`), and the post detail page (`blog/[slug]/page.tsx`).
+- `app/(public)/` — Wraps pages in `<Nav />` and `<Footer />`. Contains the homepage (`page.tsx`), the archive listing (`blog/page.tsx`), the about page (`about/page.tsx`), and the post detail page (`blog/[slug]/page.tsx`).
 - `app/admin/` — Protected admin panel with its own layout (header + `<UserButton />`). The catch-all editor route `app/admin/[id]/page.tsx` handles both create (`id === 'new'`) and edit (any real post ID).
 - `app/sign-in/[[...sign-in]]/` and `app/sign-up/[[...sign-up]]/` — Catch-all Clerk auth pages.
 - `app/api/uploadthing/` — UploadThing file router (Clerk-authenticated, images only, 4 MB max).
+- `app/sitemap.ts` and `app/robots.ts` — Dynamic sitemap (published posts only) and robots generation; use `absoluteUrl()` from `lib/seo.ts`.
 
 ### Data Flow
 
-Server Actions in `actions/posts.ts` are the only write path — no API routes for mutations. Each action calls `requireAuth()` (wraps `await auth()` from Clerk), mutates via `prisma`, then calls `revalidatePath` on affected routes. `createPost` and `deletePost` also call `redirect`.
+Server Actions in `actions/posts.ts` are the only write path — no API routes for mutations. Each action calls `requireAuth()` (wraps `await auth()` from Clerk), applies rate limiting via `enforceRateLimit()` from `lib/rate-limit.ts`, validates input with a Zod schema (`postInputSchema`), mutates via `prisma`, then calls `revalidatePath` on affected routes. `createPost`, `deletePost` also call `redirect`. `publishPost` is a **toggle** — it flips `published` and sets `publishedAt` only on first publish.
 
 `PostForm` (client component) binds server actions: `updatePost.bind(null, post.id)` or `createPost`, injecting image state via `formData.set` before calling the action. The form manages **two separate image states** — `coverImage` (used on cards/homepage) and `postCoverImage` (used as the hero in the single-post view) — each with its own `<UploadButton>`.
 
@@ -66,9 +68,11 @@ const url = (res[0] as { url?: string; ufsUrl?: string }).ufsUrl ?? res[0].url
 
 **Homepage grid** — `PostCard` uses index-based layout: `index % 3 === 0` → `md:col-span-2 aspect-[16/9]` (wide), otherwise `aspect-[3/4]`. Odd-indexed narrow cards get `md:translate-y-12` for the broken-grid offset. Parent uses `grid-flow-dense`.
 
-**MdxRenderer** — uses `next-mdx-remote/rsc` (`MDXRemote` from the `/rsc` import, not the client version). Custom components override all prose elements with Tailwind classes; there is no `@tailwindcss/typography` prose wrapper applied in the renderer. Includes a `<BleedImage>` custom component for full-bleed images with optional captions.
+**MdxRenderer** — uses `next-mdx-remote/rsc` (`MDXRemote` from the `/rsc` import, not the client version). Custom components override all prose elements with Tailwind classes; there is no `@tailwindcss/typography` prose wrapper applied in the renderer. Available custom MDX components: `<BleedImage>` (full-bleed image with caption), `<Callout type="info|warning|success|danger">`, `<StatCard>`, `<BarChart>`, `<CloudImage>`, `<PullQuote>`.
 
-**ArticleLayout** — wraps blog post content with `ReactLenis` (from `@studio-freight/react-lenis`) for smooth scrolling. Includes a sticky "Close" button (links to `/blog`).
+**ArticleLayout** — wraps blog post content in a container with `selection:bg-swaddle-ink` and a fixed sticky "Close" button (links to `/blog`).
+
+**SEO utilities** (`lib/seo.ts`) — `getSiteUrl()` reads `NEXT_PUBLIC_SITE_URL` (falls back to `localhost:3000`); `absoluteUrl(path)` prepends the site URL; `siteConfig` holds the site name/description/keywords.
 
 ### Design Tokens
 
@@ -87,6 +91,7 @@ DATABASE_URL                          # Neon PostgreSQL pooled connection
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 CLERK_SECRET_KEY
 UPLOADTHING_TOKEN
+NEXT_PUBLIC_SITE_URL                  # Production URL (e.g. https://sea-specter.vercel.app) — used by sitemap, robots, and OG metadata
 ```
 
 Clerk also needs redirect URLs configured in its dashboard (sign-in/sign-up → `/admin`).
