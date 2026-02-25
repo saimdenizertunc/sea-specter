@@ -46,7 +46,6 @@ next-env.d.ts
 # IDE / Editor
 # ========================
 .vscode/*
-.claude/
 !.vscode/settings.json
 !.vscode/extensions.json
 .idea/
@@ -89,3 +88,7 @@ coverage/
 *.key
 *.cert
 .cache/
+
+# Claude
+.claude/
+.claude
